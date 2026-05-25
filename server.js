@@ -2,30 +2,56 @@ require("dotenv").config();
 
 const express = require("express");
 const cors = require("cors");
+const mongoose = require("mongoose");
 
 const app = express();
-
-const connectDB = require("./config/DbConnect");
-const productsRoutes = require("./routes/productsRouter");
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 
-// Database Connection
-connectDB();
+// MongoDB Connection
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => console.log("MongoDB Connected Successfully"))
+  .catch((err) => console.log(err));
+
+// Dummy Products Data
+const products = [
+  {
+    id: 1,
+    title: "Laptop",
+    price: 50000,
+    category: "Electronics",
+  },
+  {
+    id: 2,
+    title: "Mobile",
+    price: 20000,
+    category: "Electronics",
+  },
+  {
+    id: 3,
+    title: "Shoes",
+    price: 3000,
+    category: "Fashion",
+  },
+];
 
 // Routes
-app.use(productsRoutes);
-
-// Default Route
 app.get("/", (req, res) => {
-  res.send("Backend Running Successfully");
+  res.json({
+    message: "Backend Running Successfully",
+  });
 });
 
-// Render Dynamic Port
-const PORT = process.env.PORT || 5000;
+app.get("/products", (req, res) => {
+  res.json(products);
+});
+
+// Port
+const PORT = 5000;
 
 app.listen(PORT, () => {
-  console.log(`Server started on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });

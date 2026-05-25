@@ -20,7 +20,7 @@ router.post('/products/add', createProduct);
 
 // GET ALL
 
-router.get('/products', getProducts);
+router.get('/', getProducts);
 
 
 // GET SINGLE
